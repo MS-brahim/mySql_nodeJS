@@ -1,15 +1,40 @@
 const express = require('express');
 const app = express();
 const path = require("path");
+const port = process.env.PORT || 3000;
+const mysql = require('mysql');
 
+var mysqlConnection = mysql.createConnection({
+    host:'localhost',
+    user:'root',
+    password:'',
+    database:'prod_categ_db'
+});
+
+mysqlConnection.connect((err)=>{
+    if(!err)
+    console.log('DATABASE Connection Succeded');
+    else
+    console.log('DATABASE Connection failed' + JSON.stringify(err, underfined,2));
+});
 
 app.set('views', './views');
 app.set('view engine', 'ejs'); 
 
 app.get('/', (req,res)=>{
-    //res.sendFile(path.join(__dirname + '//views/index.html'));
     res.render('index');
 });
+app.get('/product', (req,res)=>{
+    mysqlConnection.query('SELECT * FROM products',(err,rows,fields)=>{
+        if (!err) {
+            res.send(rows);
 
-const port = process.env.PORT || 3000;
+        }else{
+            console.log(err);
+        }
+    })
+    //res.render('product');
+});
+
+
 app.listen(port, () => console.log(`listening on port ${port}`));
