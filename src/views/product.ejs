@@ -11,16 +11,73 @@
   </head>
   <body>
     <div class="container mt-3">
+        <a href="/">Return <i class="far fa-arrow-alt-circle-left"></i></a>
         <center><h2>All Products</h2></center>
         <div class="row">
             <nav class="nav justify-content-center">
-              <a class="nav-link">
+                <a class="nav-link">
                   <select  class="form-control-sm" name="" id="">
                       <option value="">Select Categories</option>
                       <option value="">1</option>
                       <option value="">1</option>
                   </select>
-              </a>
+                </a>
+                <a class="nav-link">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#AddProd">
+                      Add new Product <i class="fa fa-product-hunt" aria-hidden="true"></i>
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="AddProd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Add New Products</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <form  action="/add" method="POST">
+                                    <div class="modal-body">                              
+                                        <div class="form-group">
+                                            <label for="name">product name</label>
+                                            <input 
+                                            type="text"
+                                            class="form-control input-lg"
+                                            id="name"
+                                            name="name"
+                                            placeholder="product name"/>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="price">Price</label>
+                                            <input 
+                                            type="text" 
+                                            class="form-control input-lg"
+                                            id="price" 
+                                            name="price"
+                                            placeholder="Your city"/>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="desc">Category</label>
+                                            <select name="" id="" class="form-control input-lg">
+                                                <option value="">AAA</option>
+                                            </select>
+                                        </div>
+                                            
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-warning w-25">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                  <!-- <input type="button" value="Add New Product +" class=" form-control-sm btn btn-outline-dark"> -->
+                </a>
             </nav>
         </div>
         <div class="table-responsive">
@@ -42,8 +99,16 @@
                         <td><%= product.name %> </td>
                         <td><%= product.price %> </td>
                         <td><%= product.category_id %></td>
-                        <td><%= product.id %></td>
-                        <td><%= product.id %></td>
+                        <td width="80">
+                            <button type="button" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-edit    "></i>
+                            </button>
+                        </td>
+                        <td width="80">
+                            <button type="button" class="btn btn-outline-danger btn-sm">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </td>
                     </tr>
                     <% }); %> 
                 </tbody>
@@ -51,6 +116,8 @@
         </div>
     </div>
     <!-- Optional JavaScript -->
+    <!-- font-awsome  -->
+    <script src="https://kit.fontawesome.com/8f45faa16b.js" crossorigin="anonymous"></script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
