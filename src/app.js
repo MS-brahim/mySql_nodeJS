@@ -25,9 +25,12 @@ app.get('/', (req,res)=>{
     res.render('index');
 });
 app.get('/product', (req,res)=>{
-    mysqlConnection.query('SELECT * FROM products',(err,rows,fields)=>{
+    let sql = 'SELECT * FROM products';
+    mysqlConnection.query(sql,(err,rows,fields)=>{
         if (!err) {
-            res.send(rows);
+            res.render('product',{
+                products:rows,
+            });
 
         }else{
             console.log(err);
