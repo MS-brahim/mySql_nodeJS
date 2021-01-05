@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
-const path = require("path");
 const port = process.env.PORT || 3000;
 const mysql = require('mysql');
+const bodyParser = require('body-parser');
+const path = require('path');
 
+// mysqlConnection 
 var mysqlConnection = mysql.createConnection({
     host:'localhost',
     user:'root',
@@ -15,20 +17,27 @@ mysqlConnection.connect((err)=>{
     if(!err)
     console.log('DATABASE Connection Succeded');
     else
-    console.log('DATABASE Connection failed' + JSON.stringify(err,2));
+    console.log('DATABASE Connection failed' + JSON.stringify(err));
 });
 
-app.set('views', './views');
+// set views file 
+app.set('views', path.join(__dirname,'views'));
+
+// set view engine 
 app.set('view engine', 'ejs'); 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 app.get('/', (req,res)=>{
     res.render('index');
 });
 
+//////////////// PRODUCTS DATA ///////////////////
 // dispaly All Items (products) 
 app.get('/product', (req,res)=>{
-    let sql = 'SELECT * FROM products';
-    mysqlConnection.query(sql,(err,rows,fields)=>{
+    let sql = 'SELECT products.*, categories.name FROM products INNER JOIN categories WHERE products.category_id = categories.id';
+    mysqlConnection.query(sql,(err,rows)=>{
         if (!err) {
             res.render('product',{
                 products:rows,
@@ -39,17 +48,47 @@ app.get('/product', (req,res)=>{
     })
 });
 
+
 //Create New Item (products)
 app.get('/add', (req, res) => {
-	res.render('add');
+	res.render('product');
 });  
 
-app.post('/add', (req, res) => {
-	const { image, name,ville,typeOfSurf} = req.body;
- 
-	users.push({ ID: users.length+1,name:name,price:price,category_id:category_id });
-	fs.writeFileSync('./data/users.json', JSON.stringify(users, null));
-	res.redirect('/'); 
+app.post('/save', (req, res) => {
+	let data = {name: req.body.name, price: req.body.price, category_id: req.body.category_id};
+    let sql = "INSERT INTO products SET ?"
+    let query = mysqlConnection.query(sql,data,(err, results)=>{
+        if(err) throw err;
+        res.redirect('/product');
+    });
 });
+
+
+// Delete Item (products) to Table
+app.get('/product/remove/:id',(req,res)=>{
+    let sql = 'DELETE FROM products WHERE id = ?';
+    mysqlConnection.query(sql,[req.params.id],(err)=>{
+        if(!err)
+        res.redirect('/product');
+        else
+        console.log(err);
+    })
+})
+
+
+//////////////// CATEGORIES DATA ///////////////////
+app.get('/product', (req,res)=>{
+    let sql = 'SELECT * FROM categories';
+    mysqlConnection.query(sql,(err,rows)=>{
+        if (!err) {
+            res.render('product',{
+                categories:rows,
+            });
+        }else{
+            console.log(err);
+        }
+    })
+});
+
 
 app.listen(port, () => console.log(`listening on port ${port}`));
