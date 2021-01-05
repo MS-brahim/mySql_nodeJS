@@ -11,20 +11,21 @@
   </head>
   <body>
     <div class="container mt-3">
-        <a href="/">Return <i class="far fa-arrow-alt-circle-left"></i></a>
+        <a href="/"><i class="far fa-arrow-alt-circle-left"></i> Return</a>
         <center><h2>All Products</h2></center>
         <div class="row">
             <nav class="nav justify-content-center">
                 <a class="nav-link">
-                  <select  class="form-control-sm" name="" id="">
-                        <option value="">Select Categories</option>
-                      
-
-                  </select>
+                    <select  class="form-control-sm" name="">
+                        <option value="">Fillter Products By Category</option>
+                        <% categories.forEach(function(category){ %> 
+                        <option value="<%= category.id %>"><%= category.name %> </option>
+                        <% }); %> 
+                    </select>
                 </a>
                 <a class="nav-link">
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#AddProd">
+                    <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#AddProd">
                       Add new Product <i class="fa fa-product-hunt" aria-hidden="true"></i>
                     </button>
                     
@@ -32,11 +33,11 @@
                     <div class="modal fade" id="AddProd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
-                                <div class="modal-header">
+                                <div class="modal-header bg-warning text-white">
                                     <h5 class="modal-title">Add New Products</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
                                 <form  action="/save" method="POST">
                                     <div class="modal-body">                              
@@ -60,18 +61,17 @@
                                         
                                         <div class="form-group">
                                             <label for="desc">Category</label>
-                                            <select name="" id="" class="form-control input-lg">
-                                                <option value="1">AAA</option>
-                                                
-                                                <option value=""></option>
-                                               
+                                            <select name="category_id" class="form-control input-lg" required>
+                                                <option value="">Select Category</option>
+                                                <% categories.forEach(function(category){ %> 
+                                                <option value="<%= category.id %>"><%= category.name %> </option>
+                                                <% }); %> 
                                             </select>
                                         </div>
                                             
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-warning w-25">Save</button>
+                                        <button type="submit" class="btn btn-warning w-75 m-auto">Save</button>
                                     </div>
                                 </form>
                             </div>
@@ -96,19 +96,67 @@
                 <tbody>
                     <% products.forEach(function(product){ %> 
                     <tr>
-                        <th scope="row"><%= product.id %> </th>
-                        <td><%= product.name %> </td>
-                        <td><%= product.price %> </td>
-                        <td><%= product.category_id %></td>
+                        <th scope="row"><%= product.Pid %> </th>
+                        <td><%= product.nameP %> </td>
+                        <td><%= product.price %> Dhs</td>
+                        <td><%= product.name %></td>
                         <td width="80">
-                            <a type="button" href="product/edit/<%= product.id %>" class="btn btn-outline-success btn-sm">
+                            <a type="button" href="product/edit/<%= product.Pid %>" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#editProd<%= product.Pid %>">
                                 <i class="fas fa-edit    "></i>
                             </a>
                         </td>
                         <td width="80">
-                            <a type="button" href="product/remove/<%= product.id %>" class="btn btn-outline-danger btn-sm">
+                            <a type="button" href="product/remove/<%= product.Pid %>" class="btn btn-outline-danger btn-sm">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </a>
+                             <!-- Modal -->
+    <div class="modal fade" id="editProd<%= product.Pid %>" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title">Update Product</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form  action="/update" method="POST">
+                    <div class="modal-body">                              
+                        <div class="form-group">
+                            <label for="name">Product name</label>
+                            <input 
+                            type="text"
+                            class="form-control input-lg"
+                            name="name"
+                            value="<%= product.nameP %>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="price">Price Dhs</label>
+                            <input 
+                            type="text" 
+                            class="form-control input-lg"
+                            name="price"
+                            value="<%= product.price %>" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="desc">Category</label>
+                            <select name="category_id" class="form-control input-lg" required>
+                                <option value="">Select Category</option>
+                                <% categories.forEach(function(category){ %> 
+                                <option value="<%= category.id %>"><%= category.name %> </option>
+                                <% }); %> 
+                            </select>
+                        </div>
+                            
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-dark w-75 m-auto">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
                         </td>
                     </tr>
                     <% }); %> 
