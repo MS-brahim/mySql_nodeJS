@@ -4,6 +4,10 @@ const port = process.env.PORT || 3000;
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const path = require('path');
+const flash = require('connect-flash');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+
 
 // mySQL Connection 
 var mysqlConnection = mysql.createConnection({
@@ -29,6 +33,19 @@ app.set('views', path.join(__dirname,'views'));
 app.set('view engine', 'ejs'); 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.use(session({
+    secret:'him',
+    saveUninitialized:true,
+    resave:true
+}));
+app.use(flash());
+app.use(function (req, res, next) {
+    res.locals.error = req.flash('error');
+    res.locals.success = req.flash('success');
+    next();
+});
 
 
 app.get('/', (req,res)=>{
@@ -63,17 +80,22 @@ app.get('/add', (req, res) => {
 app.post('/save', (req, res) => {
 	let data = {nameP: req.body.name, price: req.body.price, category_id: req.body.category_id};
     let sql = "INSERT INTO products SET ?"
-    let query = mysqlConnection.query(sql,data,(err, results)=>{
+    let query = mysqlConnection.query(sql,data,(err)=>{
         if(err) throw err;
-        res.redirect('/product');
+        if (query) {
+            req.flash('success', 'Product Added Success !!!')
+            res.redirect('/product');
+        }else{
+            req.flash('error', 'Added failed ! Please Try Again!')
+        }
     });
 });
 
 
 // EDIT Item (products) 
 app.get('/product/edit/:id',(req,res)=>{
-    const Uid = req.params.id;
-    let sql = 'SELECT * FROM products P , categories C WHERE P.category_id = C.id WHERE Pid ='.Uid;
+    var Uid = req.params.id;
+    let sql = 'SELECT * FROM products P , categories C WHERE P.category_id = C.id WHERE Pid ='+Uid;
     mysqlConnection.query(sql,(err,result)=>{
         if(!err)
         console.log(result[1]),
@@ -82,19 +104,35 @@ app.get('/product/edit/:id',(req,res)=>{
            
         });
         else
-        console.log(err);
-        
-        
+        console.log(err);        
     })
-})
+});
+app.post('/product/update', (req, res) => {
+    var Uid = req.body.id;
+    let sql = "UPDATE products SET nameP = '"+req.body.name+"', price = '"+req.body.price+"', category_id = '"+req.body.category_id+"' WHERE Pid ="+Uid;
+    mysqlConnection.query(sql,(err)=>{
+        if(!err) {
+        //res.redirect('/product');
+            req.flash('success', 'Product Updated Success !!!')
+            res.redirect('/product');
+        }else
+            req.flash('error', 'Updated failed ! Please Try Again')
+    });
+});
 
 
 // Delete Item (products) to Table
-app.get('/product/remove/:id',(req,res)=>{
+app.get('/product/remove/:id',(req,res)=>{    
     let sql = 'DELETE FROM products WHERE Pid = ?';
-    mysqlConnection.query(sql,[req.params.id],(err)=>{
-        if(!err)
-        res.redirect('/product');
+    let query = mysqlConnection.query(sql,[req.params.id],(err)=>{
+        if(!err){
+            if(query){
+                req.flash('success', 'Product Deleted Success !!!');
+                res.redirect('/product'); 
+            }else{
+                req.flash('error', 'Product Deleted faild ');
+            }
+        }
         else
         console.log(err);
     })

@@ -11,7 +11,7 @@
   </head>
   <body>
     <div class="container mt-3">
-        <a href="/"><i class="far fa-arrow-alt-circle-left"></i> Return</a>
+        <a href="/" class="text-warning"><i class="far fa-arrow-alt-circle-left"></i> Return</a>
         <center><h2>All Products</h2></center>
         <div class="row">
             <nav class="nav justify-content-center">
@@ -82,6 +82,14 @@
             </nav>
         </div>
         <div class="table-responsive">
+            <% if(success.length > 0) { %>
+            <div  class="alert alert-success">
+                <%= success %>    
+            </div><% } %>
+            <% if(error.length > 0) { %>
+            <div class="alert alert-danger">
+                <%= error %>    
+            </div><% } %>
             <table class="table table-striped">
                 <thead>
                   <tr>
@@ -101,7 +109,8 @@
                         <td><%= product.price %> Dhs</td>
                         <td><%= product.name %></td>
                         <td width="80">
-                            <a type="button" href="product/edit/<%= product.Pid %>" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#editProd<%= product.Pid %>">
+                            <!-- model btn edit  -->
+                            <a type="button" href="product/update/<%= product.Pid %>" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#editProd<%= product.Pid %>">
                                 <i class="fas fa-edit    "></i>
                             </a>
                         </td>
@@ -109,54 +118,54 @@
                             <a type="button" href="product/remove/<%= product.Pid %>" class="btn btn-outline-danger btn-sm">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </a>
-                             <!-- Modal -->
-    <div class="modal fade" id="editProd<%= product.Pid %>" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title">Update Product</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form  action="/update" method="POST">
-                    <div class="modal-body">                              
-                        <div class="form-group">
-                            <label for="name">Product name</label>
-                            <input 
-                            type="text"
-                            class="form-control input-lg"
-                            name="name"
-                            value="<%= product.nameP %>">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="price">Price Dhs</label>
-                            <input 
-                            type="text" 
-                            class="form-control input-lg"
-                            name="price"
-                            value="<%= product.price %>" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="desc">Category</label>
-                            <select name="category_id" class="form-control input-lg" required>
-                                <option value="">Select Category</option>
-                                <% categories.forEach(function(category){ %> 
-                                <option value="<%= category.id %>"><%= category.name %> </option>
-                                <% }); %> 
-                            </select>
-                        </div>
-                            
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-dark w-75 m-auto">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+                             <!-- Modal Edit-->
+                            <div class="modal fade" id="editProd<%= product.Pid %>" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-dark text-white">
+                                            <h5 class="modal-title">Update Product</h5>
+                                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form  action="/product/update" method="POST">
+                                            <input type="hidden" name="id" value="<%= product.Pid %>">
+                                            <div class="modal-body">                              
+                                                <div class="form-group">
+                                                    <label for="name">Product name</label>
+                                                    <input 
+                                                    type="text"
+                                                    class="form-control input-lg"
+                                                    name="name"
+                                                    value="<%= product.nameP %>">
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="price">Price Dhs</label>
+                                                    <input 
+                                                    type="text" 
+                                                    class="form-control input-lg"
+                                                    name="price"
+                                                    value="<%= product.price %>" required>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="desc">Category</label>
+                                                    <select name="category_id" class="form-control input-lg">
+                                                        <% categories.forEach(function(category){ %> 
+                                                        <option value="<%= category.id %>" selected><%= category.name %> </option>
+                                                        <% }); %> 
+                                                    </select>
+                                                </div>
+                                                    
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-dark w-75 m-auto">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     <% }); %> 
@@ -165,6 +174,11 @@
         </div>
     </div>
     <!-- Optional JavaScript -->
+    <script>
+    $(document).ready(function(){
+        $(".alert").fadeOut(1000);
+    });
+    </script>
     <!-- font-awsome  -->
     <script src="https://kit.fontawesome.com/8f45faa16b.js" crossorigin="anonymous"></script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
