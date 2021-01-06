@@ -6,9 +6,9 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 
 CREATE TABLE IF NOT EXISTS products (
-  id bigint(11) NOT NULL PRIMARY KEY,
-  name varchar(50) NOT NULL,
+  Pid bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  nameP varchar(50) NOT NULL,
   price double NOT NULL,
-  category_id bigint(20) NOT NULL,
+  category_id bigint(11) NOT NULL,
   FOREIGN KEY (category_id) REFERENCES categories (id)
 )

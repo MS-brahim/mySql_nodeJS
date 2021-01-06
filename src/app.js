@@ -8,7 +8,6 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
-
 // mySQL Connection 
 var mysqlConnection = mysql.createConnection({
     host:'localhost',
@@ -44,6 +43,7 @@ app.use(flash());
 app.use(function (req, res, next) {
     res.locals.error = req.flash('error');
     res.locals.success = req.flash('success');
+    
     next();
 });
 
@@ -52,11 +52,12 @@ app.get('/', (req,res)=>{
     res.render('index');
 });
 
-
 //////////////// PRODUCTS DATA ///////////////////
 // dispaly All Items (products) 
 app.get('/product', (req,res)=>{
     //let sql1 = 'SELECT * FROM products categories';
+    // filtter products By categories name 
+
     let sql = 'SELECT * FROM categories;SELECT * FROM products P , categories C WHERE P.category_id = C.id';
     mysqlConnection.query(sql, [1, 2],(err,rows)=>{
         if (!err) {
@@ -112,7 +113,6 @@ app.post('/product/update', (req, res) => {
     let sql = "UPDATE products SET nameP = '"+req.body.name+"', price = '"+req.body.price+"', category_id = '"+req.body.category_id+"' WHERE Pid ="+Uid;
     mysqlConnection.query(sql,(err)=>{
         if(!err) {
-        //res.redirect('/product');
             req.flash('success', 'Product Updated Success !!!')
             res.redirect('/product');
         }else
@@ -138,8 +138,77 @@ app.get('/product/remove/:id',(req,res)=>{
     })
 })
 
-
 //////////////// CATEGORIES DATA ///////////////////
+app.get('/category', (req,res)=>{
+    let sql = 'SELECT * FROM categories';
+    mysqlConnection.query(sql,(err,rows,fields)=>{
+        if (!err) {
+            res.render('category',{
+                categories:rows,
+            });
+        }else{
+            console.log(err);
+        }
+    })
+});
+////////////Delete Category
+app.get('/delete/:id',(req,res)=>{
+    
+    let sqlQ = `DELETE FROM categories WHERE id = `+req.params.id +``;
+    mysqlConnection.query(sqlQ,(err,rows,fields)=>{
+        
+        if (!err) {
+            res.redirect('/category')
+        }else{
+            console.log(err);
+            
+        }        
+    });
+});
+//add Category:
+app.post('/addC',(req,res)=>{
 
+    let sqlp =`INSERT INTO categories(id, name) VALUES (`+req.body.id+`,"`+req.body.category+`")`
+    mysqlConnection.query(sqlp,(err,rows,fields)=>{
+        if (!err) {
+            res.redirect('/category')
+        }else{
+            console.log(err);
+        }
+    })
+
+console.log(req.body.category);
+})
+
+
+// EDIT Item (category) 
+
+
+app.get('/edit/:id',(req,res)=>{
+    
+
+let sqlE =`SELECT * FROM categories WHERE id = `+req.params.id+` `;
+
+
+let query = mysqlConnection.query(sqlE,(err,result)=>{
+    if (err) throw err;
+    res.render('category');
+    
+});
+
+});
+///
+app.post('/category/update',(req,res)=>{
+    let catId = req.body.id;
+  
+    let sqlS ="UPDATE categories SET name='"+req.body.nameup+"' WHERE id="+catId+"";
+    
+    let query=mysqlConnection.query(sqlS,(err,result)=>{
+        if (err) throw err;
+        res.redirect('/category');
+        
+    });
+
+});
 
 app.listen(port, () => console.log(`listening on port ${port}`));

@@ -2,8 +2,10 @@
 <html lang="en">
   <head>
     <title>Products</title>
+    <link rel="icon" href="" type="image/jpg">
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
@@ -12,11 +14,15 @@
   <body>
     <div class="container mt-3">
         <a href="/" class="text-warning"><i class="far fa-arrow-alt-circle-left"></i> Return</a>
+        <a href="/category" class="text-warning float-right"> Category <i class="far fa-arrow-alt-circle-right"></i></a>
         <center><h2>All Products</h2></center>
         <div class="row">
             <nav class="nav justify-content-center">
                 <a class="nav-link">
-                    <select  class="form-control-sm" name="">
+                    <input type="search" class="form-control-sm" placeholder="Search..."  id="searchByCategory">
+                </a>
+                <a class="nav-link">
+                    <select class="form-control-sm" name="searchByCategory">
                         <option value="">Fillter Products By Category</option>
                         <% categories.forEach(function(category){ %> 
                         <option value="<%= category.id %>"><%= category.name %> </option>
@@ -83,7 +89,7 @@
         </div>
         <div class="table-responsive">
             <% if(success.length > 0) { %>
-            <div  class="alert alert-success">
+            <div  class="alert alert-success" id="alert">
                 <%= success %>    
             </div><% } %>
             <% if(error.length > 0) { %>
@@ -101,7 +107,7 @@
                     <th scope="col">Delete</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="searchLine">
                     <% products.forEach(function(product){ %> 
                     <tr>
                         <th scope="row"><%= product.Pid %> </th>
@@ -174,14 +180,24 @@
         </div>
     </div>
     <!-- Optional JavaScript -->
-    <script>
+    <script type='text/javascript'>
+    // $(document).ready(function(){
+    //     $("#alert").hide(3000);
+    // });
     $(document).ready(function(){
-        $(".alert").fadeOut(1000);
+        $("#searchByCategory").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#searchLine tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
     });
     </script>
     <!-- font-awsome  -->
     <script src="https://kit.fontawesome.com/8f45faa16b.js" crossorigin="anonymous"></script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

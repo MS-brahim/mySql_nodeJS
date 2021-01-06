@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Categories</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container mt-3">
+        <a href="/" class="text-warning"><i class="far fa-arrow-alt-circle-left"></i> Return</a>
+        <a href="/product" class="text-warning float-right"> Product <i class="far fa-arrow-alt-circle-right"></i></a>
+        <center><h2>All Categories</h2></center>
+        <div class="row">
+            <nav class="nav justify-content-center">
+              <a class="nav-link">
+                <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#AddProd">
+                Add new categorie <i class="fa fa-product-hunt" aria-hidden="true"></i>
+              </button>
+              </a>
+              
+            </nav>
+        </div> <!-- Button trigger modal -->
+               
+        <div class="table-responsive">
+            <% if(error.length > 0) { %>
+                <div class="alert alert-danger">
+                    <%= error %>    
+                </div><% } %>
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+               
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <form method="POST" action="up">
+                    <% categories.forEach(function(categorie){ %> 
+                    <tr>
+                        <th scope="row"><%= categorie.id %> </th>
+                        <td> <%= categorie.name %> </td>
+                        <!-- <td >  <a style="color: white;
+                          BACKGROUND-COLOR: RED;
+                          MARGIN-LEFT: 119PX;
+                          PADDING: 17PX;" href="/delete/<%= categorie.id %>" class="btn">delete</a></td>
+                        <td >   
+                          <a type="button" href="/edit/<%= categorie.id %>" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#editProd<%= categorie.id %>">
+                        
+                           </td> -->
+                           <td width="80">
+                            <!-- model btn edit  -->
+                            <a type="button" href="/edit/<%= categorie.id %> "class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#editProd<%= categorie.id %>"">
+                                <i class="fas fa-edit    "></i>
+                            </a>
+                        </td>
+                        <td width="80">
+                            <a type="button" href=" /delete/<%= categorie.id %>" class="btn btn-outline-danger btn-sm">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                
+                            </a>
+             
+                <!-- /////////////////////////////////////////////////////////////////////////////////// -->
+                        
+                          <!-- Modal Edit-->
+                          <div class="modal fade" id="editProd<%= categorie.id %>" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark text-white">
+                                        <h5 class="modal-title">Update categorie</h5>
+                                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form  action="/category/update" method="POST">
+                                        <input type="hidden" name="id" value="<%= categorie.id %>">
+                                        <div class="modal-body">                              
+                                            <div class="form-group">
+                                                <label for="name">categorie name</label>
+                                                <input 
+                                                type="text"
+                                                class="form-control input-lg"
+                                                name="nameup"
+                                                value="<%= categorie.name %>">
+                                            </div>
+                                         
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-dark w-75 m-auto">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                     
+    
+                    </tr>
+                   <% }); %> 
+                  </form>
+                </tbody>
+            </table>
+
+              <a class="nav-link">
+                           
+                            
+                            <!-- Modal -->
+                            <div class="modal fade" id="AddProd" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-warning text-white">
+                                            <h5 class="modal-title">Add New categorie</h5>
+                                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form  method="POST" action="/addC">
+                                            <div class="modal-body">                              
+                                                <div class="form-group">
+                                                    <label for="name">categorie Id</label>
+                                                    <input 
+                                                    type="text" name="id"
+                                                    class="form-control input-lg"
+                                                   
+                                                    placeholder="product name" required>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="price">categorie Name</label>
+                                                    <input 
+                                                    type="text"name="category" 
+                                                    class="form-control input-lg"
+                                                  
+                                                   >
+                                                </div>
+                                                
+                                               
+                                                    
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-warning w-75 m-auto">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                          <!-- <input type="button" value="Add New Product +" class=" form-control-sm btn btn-outline-dark"> -->
+                        </a>
+                    </nav>
+                </div>
+
+        </div>
+    </div>
+   
+
+   
+    </div>
+   <!-- font-awsome  -->
+   <script src="https://kit.fontawesome.com/8f45faa16b.js" crossorigin="anonymous"></script>
+   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+ </body>
+</html>
+
+  </body>
+</html>
